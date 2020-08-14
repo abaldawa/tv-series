@@ -7,7 +7,7 @@ A Node.js/Typescript REST server which returns the top 20 popular episodes of an
 2. I have used in-memory array as a database to save most visited series for analytics. It can easily replaced with any ORM client and its associated database as the code is highly modular
 3. After getting the response from TMDB API I am not caching those responses in local server because if ratings of episodes change in TMDB server then the API '/topEpisodes/:seriesId' will not show correct updated results. But caching can be easily implemented as and when we get any response from TMDB API so that the response to subsequent requests for the same seriesId can be pulled from cache instead of again going back to TMDB Server. In this case we need to decide how long we want to store information in cache (or database) before clearing those cache (or DB records) and risk showing stale responses for that time in-case the ratings change. To keep single point of truth and not show stale results this server does not cache results but as the code is modular it can be implamanted easily if we can decide how long to keep those results in cache before clearing them.  
 
-## How to run using docker container (Prerequisite -> docker must be installed and need to have TMDB developers API key as mentioned https://developers.themoviedb.org/3/getting-started/introduction)
+## How to run using docker container (Prerequisite -> docker must be installed and need to have TMDB developers API key as mentioned on https://developers.themoviedb.org/3/getting-started/introduction)
 Got to terminal and execute below commands:
 1. git clone https://github.com/abaldawa/tv-series.git
 2. cd tv-series/server
@@ -19,7 +19,7 @@ Got to terminal and execute below commands:
     1. http://localhost:3000/topEpisodes/1399 -> see the top 20 episodes of series Id '1399' (NOTE: replace 1399 with any seriesId you want to see top 20 episodes of)
     2. http://localhost:3000/analytics/popularSeries -> see the top 5 most visites series on this server
     
-## The code business logic is unit tested and can be run locally as below
+## The core business logic is unit tested and can be run locally as below
 1. git clone https://github.com/abaldawa/tv-series.git
 2. cd tv-series/server
 3. npm i
