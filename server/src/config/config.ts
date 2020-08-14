@@ -4,6 +4,20 @@
  * This module exposes methods to fetch environment variables
  */
 
+import * as dotEnv from 'dotenv';
+import * as path from 'path';
+
+let envPath: string;
+
+// Load different config file based on environment
+if (process.env.NODE_ENV === 'test') {
+  envPath = path.resolve(__dirname, '..', '..', '.env.test');
+} else {
+  envPath = path.resolve(__dirname, '..', '..', '..', '.env');
+}
+
+dotEnv.config({ path: envPath });
+
 /**
  * @public
  *

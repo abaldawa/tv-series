@@ -1,6 +1,6 @@
-/* eslint-disable import/first */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/camelcase */
+import { getTopEpisodesOfSeriesById } from '../../src/services/tvSeriesService';
 import axios, { AxiosResponse } from 'axios';
 import { trackBrowsedSeries } from '../../src/services/analyticsService';
 import { HttpError } from '../../src/errors/httpError';
@@ -9,16 +9,17 @@ import { HttpErrorResponse } from '../../src/http/http';
 import * as config from '../../src/config/config';
 
 // 1. Initialize all the pre-requisites
-const TV_SERIES_URL_TEMPLATE = 'FAKE_URL/3/tv/$tv_id?api_key=$api_key';
-const TV_SEASONS_URL_TEMPLATE = 'FAKE_URL/3/tv/$tv_id/season/$season_no?api_key=$api_key';
-const FAKE_API_KEY = 'fake_key';
+const TV_SERIES_URL_TEMPLATE = config.getTvSeriesUrl();
+const TV_SEASONS_URL_TEMPLATE = config.getTvSeasonUrl();
+const FAKE_API_KEY = config.getApiKey();
 
 const UNKNOWN_SERIES_ID = 'unknown';
 const KNOWN_SERIES_ID = `${tvSeriesData.KNOWN_SERIES_ID}`;
 
-const TV_SERIES_URL = `FAKE_URL/3/tv/${KNOWN_SERIES_ID}?api_key=${FAKE_API_KEY}`;
-const SEASON_ONE_URL = `FAKE_URL/3/tv/${KNOWN_SERIES_ID}/season/1?api_key=${FAKE_API_KEY}`;
-const SEASON_TWO_URL = `FAKE_URL/3/tv/${KNOWN_SERIES_ID}/season/2?api_key=${FAKE_API_KEY}`;
+// Initialize all the known URL's which will reach axios.get mock method
+const TV_SERIES_URL =  TV_SERIES_URL_TEMPLATE.replace('$tv_id', KNOWN_SERIES_ID).replace('$api_key', FAKE_API_KEY);
+const SEASON_ONE_URL = TV_SEASONS_URL_TEMPLATE.replace('$tv_id', KNOWN_SERIES_ID).replace('$season_no', '1').replace('$api_key', FAKE_API_KEY);
+const SEASON_TWO_URL = TV_SEASONS_URL_TEMPLATE.replace('$tv_id', KNOWN_SERIES_ID).replace('$season_no', '2').replace('$api_key', FAKE_API_KEY);;
 
 class MockAxiosError<T> {
   response: AxiosResponse<T>;
@@ -31,14 +32,6 @@ class MockAxiosError<T> {
 // 2. Mock the dependent modules which should not be executed
 jest.mock('axios');
 jest.mock('../../src/services/analyticsService');
-jest.mock('../../src/config/config');
-
-(config.getTvSeriesUrl as jest.Mock).mockImplementation(() => TV_SERIES_URL_TEMPLATE);
-(config.getTvSeasonUrl as jest.Mock).mockImplementation(() => TV_SEASONS_URL_TEMPLATE);
-(config.getApiKey as jest.Mock).mockImplementation(() => FAKE_API_KEY);
-
-// 3. Finally import the modules which needs to be tested so that its imported modules are mockek before
-import { getTopEpisodesOfSeriesById } from '../../src/services/tvSeriesService';
 
 describe('#getTopEpisodesOfSeriesById()', () => {
   beforeAll(() => {

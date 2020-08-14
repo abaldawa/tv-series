@@ -1,17 +1,14 @@
-/* eslint-disable import/first */
 /**
  * User: abhijit.baldawa
  *
  * This module initializes all the pre-requisites and then starts the express server
  */
 
-require('dotenv').config();
-
 import express from 'express';
+import { getPort, validate as validateConfig } from './config/config';
 import tvSeriesRouter from './routes/tvSeries.routes';
 import analyticsRouter from './routes/analytics.routes';
 import logger from './logger/logger';
-import { getPort, validate as validateConfig } from './config/config';
 
 const app = express();
 
