@@ -41,10 +41,16 @@ const getSeriesAndTopEpisodes = async (seriesId: string): Promise<SeriesAndTopEp
       tvSeasonUrlTemplate.replace('$season_no', `${season.season_number}`),
       `Error getting details of season - ${season.season_number} for TV show ID = '${seriesId}'`
     );
-    return seasonDetails.episodes.map((episode) => ({
-      episodeName: episode.name,
-      averageVotes: episode.vote_average
-    }));
+    return seasonDetails.episodes.map((episode) => {
+      if (typeof episode.vote_average !== 'number') {
+        return;
+      }
+
+      return {
+        episodeName: episode.name,
+        averageVotes: episode.vote_average
+      };
+    });
   }));
 
   const topEpisodes = (allEpisodes.filter(Boolean) as SeriesAndTopEpisodes['episodes'][])

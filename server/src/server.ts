@@ -10,16 +10,16 @@ import tvSeriesRouter from './routes/tvSeries.routes';
 import analyticsRouter from './routes/analytics.routes';
 import logger from './logger/logger';
 
-const app = express();
-
 /**
  * Immediately invoking async method which does all the standard server startup routine.
  */
 (async () => {
-  validateConfig();
-  const PORT = getPort();
-
   try {
+    validateConfig();
+
+    const app = express();
+    const PORT = getPort();
+
     // ---------------------------- 1. Add express routes ----------------------------------
     app.use('/topEpisodes', tvSeriesRouter);
     app.use('/analytics', analyticsRouter);
@@ -35,7 +35,7 @@ const app = express();
     logger.info(`Server is listening on port = ${PORT}`);
     // --------------------------------- 2. END -------------------------------------------------------
   } catch (err) {
-    logger.error(`Error while starting server on port = ${PORT}. Error: ${(err as Error).stack}. Exiting...`);
+    logger.error(`Error while starting server. Error: ${(err as Error).stack}. Exiting...`);
     process.exit(1);
   }
 })();
